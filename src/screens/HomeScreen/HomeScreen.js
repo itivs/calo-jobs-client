@@ -1,21 +1,15 @@
-import React from "react";
-import useApiData from "../../customHooks/useApisData";
-import { createNewJob, getJobsList } from "../../api/apiMethods";
-import Loader from "../../components/Loader/Loader";
-import ErrorComponent from "../../components/ErrorComponent/ErrorComponent";
-import moment from "moment";
-import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import React from "react";
+import toast from "react-hot-toast";
+import { createNewJob, getJobsList } from "../../api/apiMethods";
+import Card from "../../components/Card/Card";
+import ErrorComponent from "../../components/ErrorComponent/ErrorComponent";
+import Loader from "../../components/Loader/Loader";
 import Spinner from "../../components/Spinner/Spinner";
+import useApiData from "../../customHooks/useApisData";
 
 export default function HomeScreen() {
   const queryClient = useQueryClient();
-  //   const getUserProfile = useApiData(
-  //     getJobById,
-  //     "jobsList",
-  //     userData?.employeeId,
-  //     userData?.employeeId
-  //   );
 
   const jobsList = useApiData(getJobsList, "jobsList");
 
@@ -24,20 +18,13 @@ export default function HomeScreen() {
       return await createNewJob();
     },
     onSuccess: (res) => {
-      console.log("🚀 ~ file: HomeScreen.js:27 ~ HomeScreen ~ res:", res);
       if (res.status === 201) {
-        console.log(
-          "🚀 ~ file: HomeScreen.js:29 ~ HomeScreen ~ res.status === 201:",
-          res.status === 201
-        );
         toast.success(res.data.message);
         queryClient.invalidateQueries(["jobsList"]);
       }
     },
     onError: (error) => {
       toast.error("Bad Request");
-
-      // toast.error(err.message);
     },
   });
 
@@ -81,31 +68,9 @@ export default function HomeScreen() {
 
       <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
         {listData?.map((job) => (
-          <div className="flex flex-col w-full bg-slate-500 p-3 rounded-lg">
-            <div className="flex justify-between items-center border-b">
-              <p className="capitalize text-green-400 text-small-medium mt-3 mb-6">
-                Status:
-                <span
-                  className={`text-xs mx-3 px-2 py-1 rounded-full border w-fit text-white`}
-                >
-                  {job?.status || "----------"}
-                </span>
-              </p>
-              <p className="capitalize text-green-400 text-small-medium mt-3 mb-6">
-                Created At:
-                <span className={`text-xs px-2 py-1 w-fit text-white`}>
-                  {moment(job?.createdAt).format("DD MMM YYYY")}
-                </span>
-              </p>
-            </div>
-            <img
-              className="w-96 h-80 mt-4"
-              width={100}
-              height={100}
-              src={job?.result}
-              alt="Awaiting ....."
-            />
-          </div>
+          <React.Fragment key={job.id}>
+            <Card job={job} />
+          </React.Fragment>
         ))}
       </div>
     </div>
