@@ -25,9 +25,9 @@ A simple job processing system that demonstrates handling asynchronous jobs with
 
 ## Time Report
 
-Total time spent: Approximately 1 hours
+Total time spent: Approximately 1 hour
 
-- Frontend implementation: 1 hours
+- Frontend implementation: 1 hour
 
 ## Implementation Notes
 
